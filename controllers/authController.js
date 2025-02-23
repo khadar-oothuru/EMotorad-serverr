@@ -3,38 +3,80 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 const generateToken = (user) => {
-  return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+  return jwt.sign(
+    { id: user._id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
 };
 
 // Email/Password Register
 exports.register = async (req, res) => {
-  const { email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-
   try {
+    const { email, password } = req.body;
+
+    // Check if email and password are provided
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    // Check if the email is already registered
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email is already in use" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ email, password: hashedPassword });
     await newUser.save();
-    res.json({ message: "User registered successfully" });
+
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Error registering user" });
+    console.error("Error registering user:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
 // Email/Password Login
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  try {
+    const { email, password } = req.body;
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.status(400).json({ error: "Invalid credentials" });
+    // Check if email and password are provided
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ error: "User not found. Please register first." });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Incorrect password" });
+    }
+
+    const token = generateToken(user);
+    res.json({ token });
+  } catch (error) {
+    console.error("Error logging in:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  const token = generateToken(user);
-  res.json({ token });
 };
 
 // Google OAuth Success
 exports.googleAuthSuccess = (req, res) => {
-  const token = generateToken(req.user);
-  res.redirect(`http://localhost:5173?token=${token}`);
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Authentication failed" });
+    }
+
+    const token = generateToken(req.user);
+    res.redirect(`http://localhost:5173?token=${token}`);
+  } catch (error) {
+    console.error("Google OAuth error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
