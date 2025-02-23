@@ -6,6 +6,6 @@ const applicatantsSchema = new mongoose.Schema({
   youtube: { type: String, default: "" },
 });
 
-const applyicants = mongoose.model('applyicants', applicatantsSchema);
+const Applicants = mongoose.model('Applicants', applicatantsSchema);
 
-module.exports = applyicants
+module.exports = Applicants

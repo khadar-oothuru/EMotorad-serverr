@@ -1,10 +1,10 @@
-const applicants = require("../models/Applicants");
+const Applicants = require("../models/Applicants");
 
 // Create a new applicant
 exports.createApplicant = async (req, res) => {
   try {
     const { name, instagram, youtube } = req.body;
-    const newApplicant = new applicants({ name, instagram, youtube });
+    const newApplicant = new Applicants({ name, instagram, youtube });
     await newApplicant.save();
     res.status(201).json(newApplicant);
   } catch (err) {
@@ -15,7 +15,7 @@ exports.createApplicant = async (req, res) => {
 // Get all applicants
 exports.getApplicants = async (req, res) => {
   try {
-    const applicantsList = await applicants.find();
+    const applicantsList = await Applicants.find();
     res.status(200).json(applicantsList);
   } catch (err) {
     res.status(400).json({ error: "Error fetching applicants" });
@@ -26,7 +26,7 @@ exports.getApplicants = async (req, res) => {
 exports.updateApplicant = async (req, res) => {
   try {
     const { name, instagram, youtube } = req.body;
-    const updatedApplicant = await applicants.findByIdAndUpdate(
+    const updatedApplicant = await Applicants.findByIdAndUpdate(
       req.params.id,
       { name, instagram, youtube },
       { new: true }
@@ -40,7 +40,7 @@ exports.updateApplicant = async (req, res) => {
 // Delete an applicant
 exports.deleteApplicant = async (req, res) => {
   try {
-    await applicants.findByIdAndDelete(req.params.id);
+    await Applicants.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "Applicant deleted" });
   } catch (err) {
     res.status(400).json({ error: "Error deleting applicant" });
