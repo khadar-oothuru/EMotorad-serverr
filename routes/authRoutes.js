@@ -1,7 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const { register, login, googleAuthSuccess } = require("../controllers/authController");
-// const jwt = require('jsonwebtoken');
+
 const router = express.Router();
 
 router.post("/register", register);
