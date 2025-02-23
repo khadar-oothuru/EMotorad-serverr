@@ -66,6 +66,21 @@ exports.login = async (req, res) => {
   }
 };
 
+// // Google OAuth Success
+// exports.googleAuthSuccess = (req, res) => {
+//   try {
+//     if (!req.user) {
+//       return res.status(401).json({ error: "Authentication failed" });
+//     }
+
+//     const token = generateToken(req.user);
+//     res.redirect(`http://localhost:5173?token=${token}`);
+//   } catch (error) {
+//     console.error("Google OAuth error:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
 
 exports.googleAuthSuccess = (req, res) => {
   try {
@@ -84,3 +99,4 @@ exports.googleAuthSuccess = (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
