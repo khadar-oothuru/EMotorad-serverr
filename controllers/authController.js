@@ -66,7 +66,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// Google OAuth Success
+
 exports.googleAuthSuccess = (req, res) => {
   try {
     if (!req.user) {
@@ -74,7 +74,11 @@ exports.googleAuthSuccess = (req, res) => {
     }
 
     const token = generateToken(req.user);
-    res.redirect(`http://localhost:5173?token=${token}`);
+
+    // Get redirect URL from query parameter or default to localhost
+    const redirectUrl = "https://emotorad.vercel.app" || "http://localhost:5173";
+
+    res.redirect(`${redirectUrl}?token=${token}`);
   } catch (error) {
     console.error("Google OAuth error:", error);
     res.status(500).json({ error: "Internal server error" });
