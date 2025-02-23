@@ -6,6 +6,8 @@ const session = require("express-session");
 const passport = require("passport");
 const authRoutes = require("./routes/authRoutes");
 require("./config/passportSetup");
+const userRoutes = require("./routes/userRoutes");
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -33,6 +35,9 @@ app.get("/", (req, res) => {
   res.send("EMotorad Server !"); 
 });
 
+
+
+app.use("/api", userRoutes);
 
 
 app.listen(port, () => {
