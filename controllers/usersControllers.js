@@ -1,48 +1,48 @@
-const Users = require("../models/Users");
+const applicants = require("../models/Applicants");
 
-// Create a new user
-exports.createUser = async (req, res) => {
+// Create a new applicant
+exports.createApplicant = async (req, res) => {
   try {
     const { name, instagram, youtube } = req.body;
-    const newUser = new Users({ name, instagram, youtube });
-    await newUser.save();
-    res.status(201).json(newUser);
+    const newApplicant = new applicants({ name, instagram, youtube });
+    await newApplicant.save();
+    res.status(201).json(newApplicant);
   } catch (err) {
-    res.status(400).json({ error: "Error adding user" });
+    res.status(400).json({ error: "Error adding applicant" });
   }
 };
 
-// Get all users
-exports.getUsers = async (req, res) => {
+// Get all applicants
+exports.getApplicants = async (req, res) => {
   try {
-    const users = await Users.find();
-    res.status(200).json(users);
+    const applicantsList = await applicants.find();
+    res.status(200).json(applicantsList);
   } catch (err) {
-    res.status(400).json({ error: "Error fetching users" });
+    res.status(400).json({ error: "Error fetching applicants" });
   }
 };
 
-// Update a user
-exports.updateUser = async (req, res) => {
+// Update an applicant
+exports.updateApplicant = async (req, res) => {
   try {
     const { name, instagram, youtube } = req.body;
-    const updatedUser = await Users.findByIdAndUpdate(
+    const updatedApplicant = await applicants.findByIdAndUpdate(
       req.params.id,
       { name, instagram, youtube },
       { new: true }
     );
-    res.status(200).json(updatedUser);
+    res.status(200).json(updatedApplicant);
   } catch (err) {
-    res.status(400).json({ error: "Error updating user" });
+    res.status(400).json({ error: "Error updating applicant" });
   }
 };
 
-// Delete a user
-exports.deleteUser = async (req, res) => {
+// Delete an applicant
+exports.deleteApplicant = async (req, res) => {
   try {
-    await Users.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "User deleted" });
+    await applicants.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Applicant deleted" });
   } catch (err) {
-    res.status(400).json({ error: "Error deleting user" });
+    res.status(400).json({ error: "Error deleting applicant" });
   }
 };
