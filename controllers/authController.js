@@ -91,7 +91,8 @@ exports.googleAuthSuccess = (req, res) => {
     const token = generateToken(req.user);
 
     // Get redirect URL from query parameter or default to localhost
-    const redirectUrl = "https://emotorad.vercel.app" || "http://localhost:5173";
+    const redirectUrl = "https://emotorad.vercel.app" 
+    
 
     res.redirect(`${redirectUrl}?token=${token}`);
   } catch (error) {
